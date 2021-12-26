@@ -12,6 +12,9 @@ namespace Diplomski.Application.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IVehicleService, VehicleService>();
+            services.AddScoped<ITrackService, TrackService>();
+
             return services;
         }
     }

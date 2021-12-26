@@ -24,6 +24,7 @@ namespace Diplomski.Infrastructure.Persistance.Extensions
 
             services.AddSingleton<IElasticClient>(new ElasticClient(settings));
             services.AddScoped<IVehicleRepository, VehicleRepository>();
+            services.AddScoped<ITrackRepository, TrackRepository>();
 
             return services;
         }
