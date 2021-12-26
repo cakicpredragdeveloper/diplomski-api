@@ -1,0 +1,44 @@
+﻿using Diplomski.Application.Dtos;
+using Diplomski.Application.Interfaces;
+using Diplomski.Application.Interfaces.ThirdPartyContracts;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Diplomski.Application.Services
+{
+    public class VehicleService : IVehicleService
+    {
+        private readonly IVehicleRepository _vehicleRepository;
+
+        public VehicleService(IVehicleRepository vehicleRepository)
+        {
+            _vehicleRepository = vehicleRepository;
+        }
+
+        public void AddVehicle(VehicleDto vehicle)
+        {
+            _vehicleRepository.AddVehicle(vehicle);
+        }
+
+        public IList<VehicleDto> GetAll()
+        {
+            var vehicles = _vehicleRepository.GetAll();
+            return vehicles;
+        }
+
+        public VehicleDto GetVehicleByVin(string vin)
+        {
+            var vehicle = _vehicleRepository.GetVehicleByVin(vin);
+            return vehicle;
+        }
+
+        public IList<VehicleDto> GetVehicles(VehiclePaginationParameters paginationParameters)
+        {
+            var vehicles = _vehicleRepository.GetVehicles(paginationParameters);
+            return vehicles;
+        }
+    }
+}

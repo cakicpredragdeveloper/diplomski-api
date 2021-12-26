@@ -27,6 +27,7 @@ namespace Diplomski.Application.Dtos
         public bool AllowAddressBook { get; set; }
         public int AdsCount { get; set; }
     }
+
     public class UserWithEmailDto : UserDto
     {
         public string Email { get; set; }

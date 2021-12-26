@@ -15,6 +15,7 @@ using Diplomski.Infrastructure.Identity.Extensions;
 using Diplomski.Application.Extensions;
 using Diplomski.Api.Middlewares;
 using Microsoft.Extensions.Options;
+using Diplomski.Infrastructure.Persistance.Extensions;
 
 namespace Diplomski.Api
 {
@@ -41,6 +42,7 @@ namespace Diplomski.Api
 
             services.AddIdentity();
             services.AddApplicationServices();
+            services.AddPersistence();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

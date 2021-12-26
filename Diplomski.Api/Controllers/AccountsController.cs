@@ -101,10 +101,5 @@ namespace Diplomski.Api.Controllers
             
             return NotFound("Token does not exist.");
         }
-
-
-
-
-
     }
 }
