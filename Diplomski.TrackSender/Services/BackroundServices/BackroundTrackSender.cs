@@ -19,9 +19,20 @@ namespace Diplomski.TrackSender.BackroundServices
         private readonly ILogger<BackroundTrackSender> _logger;
         private IProducer<Null, string> _producer;
 
+        public BackroundTrackSender(ILogger<BackroundTrackSender> logger)
+        {
+            _logger = logger;
+
+            var config = new ProducerConfig()
+            {
+                BootstrapServers = "localhost:9092",
+            };
+            _producer = new ProducerBuilder<Null, string>(config).Build();
+        }
+
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            using (var reader = new StreamReader("AVL_DataPoints.csv"))
+            using (var reader = new StreamReader("C:\\Users\\Predrag\\Desktop\\Diplomski rad\\Aplikacija\\diplomski-api\\Diplomski.TrackSender\\AVL_DataPoints.csv"))
             {
                 Thread.Sleep(10000);
                 while (!reader.EndOfStream)
@@ -36,7 +47,7 @@ namespace Diplomski.TrackSender.BackroundServices
                                                 new Message<Null, string>() { Value = json },
                                                 cancellationToken);
 
-                    Thread.Sleep(20000);
+                    Thread.Sleep(5000);
                 }
 
                 _producer.Flush(TimeSpan.FromSeconds(10));
@@ -55,7 +66,6 @@ namespace Diplomski.TrackSender.BackroundServices
         {
             string[] values = line.Split(',');
 
-            string vehicleId = values[0];
             double lat = Double.Parse(values[1]);
             double lng = Double.Parse(values[2]);
             double speed = Double.Parse(values[3]);
@@ -63,6 +73,7 @@ namespace Diplomski.TrackSender.BackroundServices
 
             return new TrackDto()
             {
+                Vin = "3vw1k7aj2fm144974",
                 DateTime = DateTime.Now,
                 GeoLocation = new GeoLocation(lat, lng),
                 Speed = speed,

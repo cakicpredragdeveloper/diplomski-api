@@ -57,7 +57,10 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
 
         public IList<VehicleDto> GetVehicles(VehiclePaginationParameters paginationParameters)
         {
-            throw new NotImplementedException();
+            //var searchDescriptor = new SearchDescriptor<VehicleDto>();
+            //searchDescriptor.Query
+
+            return null;
         }
     }
 }

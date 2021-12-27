@@ -4,6 +4,7 @@ using Kafka.Public;
 using Kafka.Public.Loggers;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Nest;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,13 +18,14 @@ namespace Diplomski.Application.Services.BackroundServices
     public class BackroundTrackReceiver : IHostedService
     {
         private readonly ILogger<BackroundTrackReceiver> _logger;
-        private readonly ITrackService _trackService;
         private ClusterClient _cluster;
+        private ElasticClient _elasticClient;
 
-        public BackroundTrackReceiver(ILogger<BackroundTrackReceiver> logger, ITrackService trackService)
+        public BackroundTrackReceiver(ILogger<BackroundTrackReceiver> logger)
         {
             _logger = logger;
-            _trackService = trackService;
+            _elasticClient = new ElasticClient();
+
             _cluster = new ClusterClient(new Kafka.Public.Configuration
             {
                 Seeds = "localhost:9092"
@@ -41,8 +43,7 @@ namespace Diplomski.Application.Services.BackroundServices
 
                 TrackDto track = JsonConvert.DeserializeObject<TrackDto>(json);
 
-                _trackService.AddTrack(track);
-
+                var indexResponse = _elasticClient.Index(track, i => i.Index("tracking_3vw1k7aj2fm144974"));
             };
         }
 
