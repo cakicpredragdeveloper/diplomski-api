@@ -20,7 +20,7 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
 
         public void AddTrack(TrackDto track)
         {
-            var indexResponse = _elasticClient.Index(track, i => i.Index("tracking_" + track.VehicleId.ToLower()));
+            var indexResponse = _elasticClient.Index(track, i => i.Index("tracking_3vw1k7aj2fm144974"));
         }
     }
 }

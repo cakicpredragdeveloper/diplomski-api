@@ -10,7 +10,7 @@ namespace Diplomski.Application.Dtos
     public class TrackDto
     {
         [Keyword]
-        public string VehicleId { get; set; }
+        public string Vin { get; set; }
 
         [Date]
         public DateTime DateTime { get; set; }
