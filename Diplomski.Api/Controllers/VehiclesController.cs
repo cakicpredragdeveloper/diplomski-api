@@ -22,8 +22,8 @@ namespace Diplomski.Api.Controllers
         [HttpGet]
         public IActionResult GetVehicles([FromQuery] VehiclePaginationParameters filter)
         {
-            var vehicles = _vehicleService.GetVehicles(filter);
-            return Ok(vehicles);
+            var paginationResponse = _vehicleService.GetVehicles(filter);
+            return Ok(paginationResponse);
         }
 
         [HttpGet]

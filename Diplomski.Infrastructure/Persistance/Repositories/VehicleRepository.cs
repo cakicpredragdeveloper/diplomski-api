@@ -79,7 +79,7 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
             return document;
         }
 
-        public IList<VehicleDto> GetVehicles(VehiclePaginationParameters filter)
+        public PaginationResponse<VehicleDto> GetVehicles(VehiclePaginationParameters filter)
         {
             var queryContainer = new QueryContainer();
 
@@ -149,7 +149,15 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
             .Size(filter.PageSize)
             .Index("vehicle"));
 
-            return searchResponse.Documents.ToList();
+            PaginationResponse<VehicleDto> paginationrResponse = new PaginationResponse<VehicleDto>()
+            {
+                PageIndex = filter.PageIndex,
+                PageSize = filter.PageSize,
+                Total = (int)searchResponse.Total,
+                Items = searchResponse.Documents.ToList()
+            };
+
+            return paginationrResponse;
         }
     }
 }

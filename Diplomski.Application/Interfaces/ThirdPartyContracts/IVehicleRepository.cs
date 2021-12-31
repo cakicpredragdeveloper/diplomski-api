@@ -9,7 +9,7 @@ namespace Diplomski.Application.Interfaces.ThirdPartyContracts
 {
     public interface IVehicleRepository
     {
-        IList<VehicleDto> GetVehicles(VehiclePaginationParameters filter);
+        PaginationResponse<VehicleDto> GetVehicles(VehiclePaginationParameters filter);
 
         IList<VehicleDto> GetAll();
 

@@ -41,7 +41,7 @@ namespace Diplomski.Application.Services
             return vehicle;
         }
 
-        public IList<VehicleDto> GetVehicles(VehiclePaginationParameters filter)
+        public PaginationResponse<VehicleDto> GetVehicles(VehiclePaginationParameters filter)
         {
             var vehicles = _vehicleRepository.GetVehicles(filter);
             return vehicles;
