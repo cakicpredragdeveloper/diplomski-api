@@ -39,9 +39,33 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
             return searchResponse.Documents.ToList();
         }
 
+        public IList<ManufacturerWithModels> GetManufacturersAndModels()
+        {
+            List<ManufacturerWithModels> manufacturerWithModels = new List<ManufacturerWithModels>();
+
+            var searchResponse = _elasticClient.Search<VehicleDto>(s =>
+                s.Aggregations(aggs =>
+                aggs.Terms("by_manufacturer", vehicle => vehicle.Field(x => x.ManufacturerName)
+                .Aggregations(a => a.Terms("models", vehicle => vehicle.Field(x => x.ModelName))))).Size(1000).Index("vehicle"));
+
+            var manufacturerGroups = searchResponse.Aggregations.Terms("by_manufacturer").Buckets;
+
+            foreach(var group in manufacturerGroups)
+            {
+                var models = group.Terms("models").Buckets.Select(b => b.Key).ToList();
+                manufacturerWithModels.Add(new ManufacturerWithModels()
+                {
+                    Manufacturer = group.Key,
+                    Models = group.Terms("models").Buckets.Select(b => b.Key).ToList()
+                });
+            }
+
+            return manufacturerWithModels;
+        }
+
         public VehicleDto GetVehicleByVin(string vin)
         {
-            var searchResponse = _elasticClient.Search<VehicleDto>(s => s
+            var searchResponse = _elasticClient.Search<VehicleDto>(s => s 
                 .Query(q => q
                     .Match(m => m
                         .Field(f => f.VIN)
@@ -62,5 +86,7 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
 
             return null;
         }
+
+
     }
 }

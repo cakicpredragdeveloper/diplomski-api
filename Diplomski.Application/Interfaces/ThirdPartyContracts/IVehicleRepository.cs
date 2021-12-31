@@ -16,5 +16,7 @@ namespace Diplomski.Application.Interfaces.ThirdPartyContracts
         VehicleDto GetVehicleByVin(string vin);
 
         void AddVehicle(VehicleDto vehicle);
+
+        IList<ManufacturerWithModels> GetManufacturersAndModels();
     }
 }

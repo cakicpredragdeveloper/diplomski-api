@@ -48,4 +48,11 @@ namespace Diplomski.Application.Dtos
         [Number]
         public double PriceEur { get; set; }
     }
+
+    public class ManufacturerWithModels
+    {
+        public string Manufacturer { get; set; }
+
+        public List<string> Models { get; set; }
+    }
 }

@@ -34,7 +34,6 @@ namespace Diplomski.Api.Controllers
             return Ok(vehicles);
         }
 
-
         [HttpGet]
         [Route("get-by-id")]
         public IActionResult GetVehicleById([FromQuery] string id)
@@ -56,6 +55,14 @@ namespace Diplomski.Api.Controllers
         {
             _vehicleService.AddVehicle(vehicle);
             return Ok(vehicle);
+        }
+
+        [HttpGet]
+        [Route("get-manufacturers-and-models")]
+        public IActionResult GetManufacturersAndModels()
+        {
+            var result = _vehicleService.GetManufacturersAndModels();
+            return Ok(result);
         }
     }
 }

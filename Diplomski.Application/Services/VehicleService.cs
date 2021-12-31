@@ -29,6 +29,12 @@ namespace Diplomski.Application.Services
             return vehicles;
         }
 
+        public IList<ManufacturerWithModels> GetManufacturersAndModels()
+        {
+            var result = _vehicleRepository.GetManufacturersAndModels();
+            return result;
+        }
+
         public VehicleDto GetVehicleByVin(string vin)
         {
             var vehicle = _vehicleRepository.GetVehicleByVin(vin);
