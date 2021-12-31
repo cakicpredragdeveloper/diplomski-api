@@ -45,8 +45,8 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
 
             var searchResponse = _elasticClient.Search<VehicleDto>(s =>
                 s.Aggregations(aggs =>
-                aggs.Terms("by_manufacturer", vehicle => vehicle.Field(x => x.ManufacturerName)
-                .Aggregations(a => a.Terms("models", vehicle => vehicle.Field(x => x.ModelName))))).Size(1000).Index("vehicle"));
+                aggs.Terms("by_manufacturer", vehicle => vehicle.Field(x => x.ManufacturerName).Size(1000)
+                .Aggregations(a => a.Terms("models", vehicle => vehicle.Field(x => x.ModelName).Size(1000))))).Index("vehicle"));
 
             var manufacturerGroups = searchResponse.Aggregations.Terms("by_manufacturer").Buckets;
 
@@ -79,14 +79,77 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
             return document;
         }
 
-        public IList<VehicleDto> GetVehicles(VehiclePaginationParameters paginationParameters)
+        public IList<VehicleDto> GetVehicles(VehiclePaginationParameters filter)
         {
-            //var searchDescriptor = new SearchDescriptor<VehicleDto>();
-            //searchDescriptor.Query
+            var queryContainer = new QueryContainer();
 
-            return null;
+            #region Prepare queries
+
+            TermQuery query = null;
+            NumericRangeQuery rangeQuery = null; 
+            
+            if(!string.IsNullOrEmpty(filter.ManufacturerName))
+            {
+                query = new TermQuery { Field = "manufacturerName", Value = filter.ManufacturerName };
+                queryContainer &= query;
+
+                if(!string.IsNullOrEmpty(filter.ModelName))
+                {
+                    query = new TermQuery { Field = "modelName", Value = filter.ModelName };
+                    queryContainer &= query;
+                }
+            }
+
+            if(filter.YearProduced != null)
+            {
+                rangeQuery = new NumericRangeQuery()
+                {
+                    Name = "yearProduced_range",
+                    Field = "yearProduced",
+                    GreaterThanOrEqualTo = filter.YearProduced.From ?? null,
+                    LessThanOrEqualTo = filter.YearProduced.To ?? null
+                };
+
+                queryContainer &= rangeQuery;
+            }
+
+            if(filter.OdometerValue != null)
+            {
+                rangeQuery = new NumericRangeQuery()
+                {
+                    Name = "odometerValue_range",
+                    Field = "odometerValue",
+                    GreaterThanOrEqualTo = filter.OdometerValue.From ?? null,
+                    LessThanOrEqualTo = filter.OdometerValue.To ?? null
+                };
+
+                queryContainer &= rangeQuery;
+            }
+
+            if (!string.IsNullOrEmpty(filter.EngineFuel))
+            {
+                query = new TermQuery { Field = "engineFuel", Value = filter.EngineFuel };
+                queryContainer &= query;
+
+                query = new TermQuery { Field = "engineHasGas", Value = filter.EngineHasGas };
+                queryContainer &= query;
+            }
+
+            if(!string.IsNullOrEmpty(filter.Drivetrain))
+            {
+                query = new TermQuery { Field = "driveTrain", Value = filter.Drivetrain };
+                queryContainer &= query;
+            }
+
+            #endregion
+
+            var searchResponse = _elasticClient.Search<VehicleDto>(s => s
+            .Query(_ => queryContainer)
+            .From(filter.PageIndex * filter.PageSize)
+            .Size(filter.PageSize)
+            .Index("vehicle"));
+
+            return searchResponse.Documents.ToList();
         }
-
-
     }
 }

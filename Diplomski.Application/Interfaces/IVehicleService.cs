@@ -9,7 +9,7 @@ namespace Diplomski.Application.Interfaces
 {
     public interface IVehicleService
     {
-        IList<VehicleDto> GetVehicles(VehiclePaginationParameters paginationParameters);
+        IList<VehicleDto> GetVehicles(VehiclePaginationParameters filter);
 
         IList<VehicleDto> GetAll();
 

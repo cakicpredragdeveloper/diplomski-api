@@ -16,7 +16,7 @@ namespace Diplomski.Application.Dtos
 
         public string ModelName { get; set; }
 
-        YearProducedFilter YearProduced { get; set; }
+        public YearProducedFilter YearProduced { get; set; }
 
         public OdometerValueFilter OdometerValue { get; set; }
 
@@ -29,15 +29,15 @@ namespace Diplomski.Application.Dtos
 
     public class YearProducedFilter
     {
-        public int From { get; set; }
+        public int? From { get; set; }
 
-        public int To { get; set; }
+        public int? To { get; set; }
     }
 
     public class OdometerValueFilter
     {
-        public int From { get; set; }
+        public int? From { get; set; }
 
-        public int To { get; set; }
+        public int? To { get; set; }
     }
 }
