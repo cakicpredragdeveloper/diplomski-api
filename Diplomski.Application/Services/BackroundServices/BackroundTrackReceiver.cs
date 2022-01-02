@@ -18,13 +18,18 @@ namespace Diplomski.Application.Services.BackroundServices
     public class BackroundTrackReceiver : IHostedService
     {
         private readonly ILogger<BackroundTrackReceiver> _logger;
+        private readonly ElasticSearchOptions _options;
         private ClusterClient _cluster;
         private ElasticClient _elasticClient;
 
-        public BackroundTrackReceiver(ILogger<BackroundTrackReceiver> logger)
+        public BackroundTrackReceiver(ILogger<BackroundTrackReceiver> logger, ElasticSearchOptions options)
         {
             _logger = logger;
-            _elasticClient = new ElasticClient();
+            _options = options;
+
+            var settings = new ConnectionSettings(new Uri(_options.Url));
+            settings.BasicAuthentication(_options.Username, _options.Password);
+            _elasticClient = new ElasticClient(settings);
 
             _cluster = new ClusterClient(new Kafka.Public.Configuration
             {

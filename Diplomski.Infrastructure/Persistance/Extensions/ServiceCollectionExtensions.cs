@@ -21,6 +21,7 @@ namespace Diplomski.Infrastructure.Persistance.Extensions
                 .AddJsonFile($"appsettings.{environment}.json", optional: true)
                 .Build();
             var settings = new ConnectionSettings(new Uri(configuration["elasticsearch:url"]));
+            settings.BasicAuthentication(configuration["elasticsearch:username"], configuration["elasticsearch:password"]);
 
             services.AddSingleton<IElasticClient>(new ElasticClient(settings));
             services.AddScoped<IVehicleRepository, VehicleRepository>();

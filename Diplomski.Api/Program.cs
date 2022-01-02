@@ -24,7 +24,13 @@ namespace Diplomski.Api
                 {
                     webBuilder.UseStartup<Startup>();
                 })
-                .ConfigureServices(services =>
-                    services.AddHostedService<BackroundTrackReceiver>());
+                .ConfigureServices((hostContext, services) =>
+                {
+                    IConfiguration configuration = hostContext.Configuration;
+                    ElasticSearchOptions options = configuration.GetSection("elasticsearch").Get<ElasticSearchOptions>();
+
+                    services.AddSingleton(options);
+                    services.AddHostedService<BackroundTrackReceiver>();
+                });
     }
 }
