@@ -18,9 +18,14 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
             _elasticClient = elasticClient;
         }
 
+        public void AddTrackingIndexForVehicle(VehicleDto vehicle)
+        {
+            var createIndexResponse = _elasticClient.Indices.Create("tracking_" + vehicle.Vin.ToLower());
+        }
+
         public void AddVehicle(VehicleDto vehicle)
         {
-            var vehicleWithSameVin = GetVehicleByVin(vehicle.VIN);
+            var vehicleWithSameVin = GetVehicleByVin(vehicle.Vin);
 
             if (vehicleWithSameVin == null)
             {
@@ -68,7 +73,7 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
             var searchResponse = _elasticClient.Search<VehicleDto>(s => s 
                 .Query(q => q
                     .Match(m => m
-                        .Field(f => f.VIN)
+                        .Field(f => f.Vin)
                         .Query(vin)
                     )
                 ).Index("vehicle")

@@ -18,6 +18,11 @@ namespace Diplomski.Application.Services
             _vehicleRepository = vehicleRepository;
         }
 
+        public void AddTrackingIndexForVehicle(VehicleDto vehicle)
+        {
+            _vehicleRepository.AddTrackingIndexForVehicle(vehicle);
+        }
+
         public void AddVehicle(VehicleDto vehicle)
         {
             _vehicleRepository.AddVehicle(vehicle);

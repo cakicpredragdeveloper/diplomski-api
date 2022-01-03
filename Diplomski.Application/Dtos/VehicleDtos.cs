@@ -10,7 +10,7 @@ namespace Diplomski.Application.Dtos
     public class VehicleDto
     {
         [Keyword]
-        public string VIN { get; set; }
+        public string Vin { get; set; }
 
         [Text]
         public string ManufacturerName { get; set; }

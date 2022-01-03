@@ -54,7 +54,23 @@ namespace Diplomski.Api.Controllers
         public IActionResult AddVehicle([FromBody] VehicleDto vehicle)
         {
             _vehicleService.AddVehicle(vehicle);
+            _vehicleService.AddTrackingIndexForVehicle(vehicle);
+
             return Ok(vehicle);
+        }
+
+        [HttpPost]
+        [Route("add-tracking-index-for-vehicle")]
+        public IActionResult AddTrackingIndexForVehicle(string vehicleVin)
+        {
+            var vehicle = _vehicleService.GetVehicleByVin(vehicleVin);
+
+            if (vehicle != null)
+            {
+                _vehicleService.AddTrackingIndexForVehicle(vehicle);
+            }
+
+            return Ok();
         }
 
         [HttpGet]

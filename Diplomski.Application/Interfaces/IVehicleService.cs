@@ -18,5 +18,7 @@ namespace Diplomski.Application.Interfaces
         void AddVehicle(VehicleDto vehicle);
 
         IList<ManufacturerWithModels> GetManufacturersAndModels();
+
+        void AddTrackingIndexForVehicle(VehicleDto vehicle);
     }
 }

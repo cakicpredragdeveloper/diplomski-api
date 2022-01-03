@@ -18,5 +18,7 @@ namespace Diplomski.Application.Interfaces.ThirdPartyContracts
         void AddVehicle(VehicleDto vehicle);
 
         IList<ManufacturerWithModels> GetManufacturersAndModels();
+
+        void AddTrackingIndexForVehicle(VehicleDto vehicle);
     }
 }
