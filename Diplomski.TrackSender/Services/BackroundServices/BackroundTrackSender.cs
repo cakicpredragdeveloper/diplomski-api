@@ -47,7 +47,7 @@ namespace Diplomski.TrackSender.BackroundServices
                                                 new Message<Null, string>() { Value = json },
                                                 cancellationToken);
 
-                    Thread.Sleep(5000);
+                    Thread.Sleep(30000);
                 }
 
                 _producer.Flush(TimeSpan.FromSeconds(10));
@@ -66,18 +66,32 @@ namespace Diplomski.TrackSender.BackroundServices
         {
             string[] values = line.Split(',');
 
+            string vin = values[0];
             double lat = Double.Parse(values[1]);
             double lng = Double.Parse(values[2]);
-            double speed = Double.Parse(values[3]);
-            double course = Double.Parse(values[4]);
+            long timeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            float speed = float.Parse(values[4]);
+            string place = values[5];
+            float kilometrageStartOfDay = float.Parse(values[6]);
+            float kilometrage = float.Parse(values[7]);
+            float fuelLevel = float.Parse(values[8]);
+            string city = values[9];
+            float bateryVoltage = float.Parse(values[10]);
+            float direction = float.Parse(values[11]);
 
             return new TrackDto()
             {
-                Vin = "3vw1k7aj2fm144974",
-                DateTime = DateTime.Now,
+                Vin = vin,
+                Timestamp = timeStamp,
                 GeoLocation = new GeoLocation(lat, lng),
                 Speed = speed,
-                Course = course
+                Place = place,
+                KilometrageStartOfDay = kilometrageStartOfDay,
+                Kilometrage = kilometrage,
+                FuelLevel = fuelLevel,
+                City = city,
+                BateryVoltage = bateryVoltage,
+                Direction = direction
             };
         }
 

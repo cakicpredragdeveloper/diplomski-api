@@ -1,5 +1,6 @@
 ﻿using Diplomski.Application.Dtos;
 using Diplomski.Application.Interfaces;
+using Elasticsearch.Net;
 using Kafka.Public;
 using Kafka.Public.Loggers;
 using Microsoft.Extensions.Hosting;
@@ -9,6 +10,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,7 +51,11 @@ namespace Diplomski.Application.Services.BackroundServices
 
                 TrackDto track = JsonConvert.DeserializeObject<TrackDto>(json);
 
-                var indexResponse = _elasticClient.Index(track, i => i.Index("tracking_3vw1k7aj2fm144974"));
+                string jsonString = JsonConvert.SerializeObject(track);
+                jsonString = jsonString.Replace("Latitude", "lat");
+                jsonString = jsonString.Replace("Longitude", "lon");
+
+                var indexResponse = _elasticClient.LowLevel.Index<StringResponse>("timeseries_tracking", PostData.String(jsonString), null);
             };
         }
 

@@ -1,6 +1,8 @@
 ﻿using Diplomski.Application.Dtos;
 using Diplomski.Application.Interfaces.ThirdPartyContracts;
+using Elasticsearch.Net;
 using Nest;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +22,16 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
 
         public void AddTrack(TrackDto track)
         {
-            var indexResponse = _elasticClient.Index(track, i => i.Index("tracking_3vw1k7aj2fm144974"));
+            track.GeoLocation = new GeoLocation(43.331809, 21.89199);
+
+            track.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+            string jsonString = JsonConvert.SerializeObject(track);
+
+            jsonString = jsonString.Replace("Latitude", "lat");
+            jsonString = jsonString.Replace("Longitude", "lon");
+
+            var indexResponse = _elasticClient.LowLevel.Index<StringResponse>("timeseries_tracking", PostData.String(jsonString), null);
         }
     }
 }

@@ -13,10 +13,12 @@ namespace Diplomski.Api.Controllers
     public class VehiclesController : Controller
     {
         private readonly IVehicleService _vehicleService;
+        private readonly ITrackService _trackService;
 
-        public VehiclesController(IVehicleService vehicleService)
+        public VehiclesController(IVehicleService vehicleService, ITrackService trackService)
         {
             _vehicleService = vehicleService;
+            _trackService = trackService;
         }
 
         [HttpGet]
@@ -79,6 +81,13 @@ namespace Diplomski.Api.Controllers
         {
             var result = _vehicleService.GetManufacturersAndModels();
             return Ok(result);
+        }
+
+        [HttpPost("create-track")]
+        public IActionResult CreateTrack(TrackDto track)
+        {
+            _trackService.AddTrack(track);
+            return Ok();
         }
     }
 }
