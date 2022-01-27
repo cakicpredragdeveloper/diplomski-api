@@ -51,11 +51,7 @@ namespace Diplomski.Application.Services.BackroundServices
 
                 TrackDto track = JsonConvert.DeserializeObject<TrackDto>(json);
 
-                string jsonString = JsonConvert.SerializeObject(track);
-                jsonString = jsonString.Replace("Latitude", "lat");
-                jsonString = jsonString.Replace("Longitude", "lon");
-
-                var indexResponse = _elasticClient.LowLevel.Index<StringResponse>("timeseries_tracking", PostData.String(jsonString), null);
+                var indexResponse = _elasticClient.Index<TrackDto>(track, i => i.Index("timeseries_tracking"));
             };
         }
 

@@ -273,7 +273,7 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
 
             if(currentPosition != null)
             {
-                var vehicles = GetTracksWithGeoDistanceOfPoint(currentPosition.GeoLocation.Latitude, currentPosition.GeoLocation.Longitude, distance);
+                var vehicles = GetTracksWithGeoDistanceOfPoint(currentPosition.GeoLocation.Latitude, currentPosition.GeoLocation.Longitude, distance).Where(x => x != vin).ToList();
                 return vehicles;
             }
 

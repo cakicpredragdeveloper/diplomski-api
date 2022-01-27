@@ -18,7 +18,7 @@ namespace Diplomski.TrackSender.BackroundServices
     {
         private readonly ILogger<BackroundTrackSender> _logger;
         private IProducer<Null, string> _producer;
-
+        private bool first;
         public BackroundTrackSender(ILogger<BackroundTrackSender> logger)
         {
             _logger = logger;
@@ -32,25 +32,34 @@ namespace Diplomski.TrackSender.BackroundServices
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            using (var reader = new StreamReader("C:\\Users\\Predrag\\Desktop\\Diplomski rad\\Aplikacija\\diplomski-api\\Diplomski.TrackSender\\AVL_DataPoints.csv"))
+            using (var reader1 = new StreamReader("C:\\Users\\Predrag\\Desktop\\1G6AH5SX0E0299293.csv"))
             {
-                Thread.Sleep(10000);
-                while (!reader.EndOfStream)
+                using(var reader2 = new StreamReader("C:\\Users\\Predrag\\Desktop\\WAUKG78E46A840649.csv"))
                 {
-                    var line = reader.ReadLine();
-                    var track = GetTrackFromLine(line);
+                    Thread.Sleep(10000);
 
-                    string json = JsonConvert.SerializeObject(track);
-                    _logger.LogInformation("Sending track: \n" + json + "\n\n");
+                    first = true;
 
-                    await _producer.ProduceAsync("demo-tracks-topic",
-                                                new Message<Null, string>() { Value = json },
-                                                cancellationToken);
+                    while (!reader1.EndOfStream && !reader2.EndOfStream)
+                    {
+                        var line = first == true ? reader1.ReadLine() : reader2.ReadLine();
 
-                    Thread.Sleep(30000);
+                        var track = GetTrackFromLine(line);
+
+                        string json = JsonConvert.SerializeObject(track);
+                        _logger.LogInformation("Sending track: \n" + json + "\n\n");
+
+                        await _producer.ProduceAsync("demo-tracks-topic",
+                                                    new Message<Null, string>() { Value = json },
+                                                    cancellationToken);
+
+                        first = !first;
+
+                        Thread.Sleep(60000);
+                    }
+                    
+                    _producer.Flush(TimeSpan.FromSeconds(10));
                 }
-
-                _producer.Flush(TimeSpan.FromSeconds(10));
             }
         }
 
@@ -69,29 +78,32 @@ namespace Diplomski.TrackSender.BackroundServices
             string vin = values[0];
             double lat = Double.Parse(values[1]);
             double lng = Double.Parse(values[2]);
-            long timeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            DateTime dateTimeTmp = DateTime.Now;
             float speed = float.Parse(values[4]);
-            string place = values[5];
-            float kilometrageStartOfDay = float.Parse(values[6]);
-            float kilometrage = float.Parse(values[7]);
-            float fuelLevel = float.Parse(values[8]);
-            string city = values[9];
-            float bateryVoltage = float.Parse(values[10]);
-            float direction = float.Parse(values[11]);
+            float kilometrageStartOfDay = float.Parse(values[5]);
+            float kilometrage = float.Parse(values[6]);
+            float fuelLevel = float.Parse(values[7]);
+            string city = values[8];
+            float bateryVoltage = float.Parse(values[9]);
+            float direction = float.Parse(values[10]);
+            string manufacturerName = first == true ? "Kia" : "Audi";
+            string modelName = first == true ? "Rio" : "A3";
 
             return new TrackDto()
             {
                 Vin = vin,
-                //Timestamp = timeStamp,
+                Timestamp = dateTimeTmp,
                 GeoLocation = new GeoLocation(lat, lng),
                 Speed = speed,
-                Place = place,
+                Place = String.Empty,
                 KilometrageStartOfDay = kilometrageStartOfDay,
                 Kilometrage = kilometrage,
                 FuelLevel = fuelLevel,
                 City = city,
                 BateryVoltage = bateryVoltage,
-                Direction = direction
+                Direction = direction,
+                ManufacturerName = manufacturerName,
+                ModelName = modelName
             };
         }
 
