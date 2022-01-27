@@ -28,6 +28,12 @@ namespace Diplomski.Api.Controllers
             return Ok(paginationResponse);
         }
 
+        [HttpGet("index")]
+        public IActionResult Get()
+        {
+            return Ok("hello world");
+        }
+
         [HttpGet]
         [Route("get-all")]
         public IActionResult GetAll()
@@ -81,13 +87,6 @@ namespace Diplomski.Api.Controllers
         {
             var result = _vehicleService.GetManufacturersAndModels();
             return Ok(result);
-        }
-
-        [HttpPost("create-track")]
-        public IActionResult CreateTrack(TrackDto track)
-        {
-            _trackService.AddTrack(track);
-            return Ok();
         }
     }
 }

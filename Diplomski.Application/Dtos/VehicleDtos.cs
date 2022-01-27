@@ -47,9 +47,6 @@ namespace Diplomski.Application.Dtos
 
         [Number]
         public double PriceEur { get; set; }
-
-        [Keyword]
-        public string MapKey { get; set; }
     }
 
     public class ManufacturerWithModels

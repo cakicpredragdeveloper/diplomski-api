@@ -10,5 +10,25 @@ namespace Diplomski.Application.Interfaces
     public interface ITrackService
     {
         void AddTrack(TrackDto track);
+
+        void AddTrackList(List<TrackDto> tracks);
+
+        List<TrackDto> GetTracksForVehicle(VehicleTrackSearchParameters searchParameters);
+
+        SpeedStatistics GetSpeedStatisticsForVehicle(VehicleTrackSearchParameters searchParameters);
+
+        double GetKilometrageForVehicle(VehicleTrackSearchParameters searchParameters);
+
+        KilometrageStatistics GetKilometrageForVehicleByDateInterval(VehicleTrackSearchParameters searchParameters);
+
+        KilometrageStatistics GetKilometrageForVehiclesByDateInterval(MarksModelsTrackSearchParameteres searchParameteres);
+
+        List<string> GetTracksWithGeoDistanceOfPoint(double lat, double lng, double distance);
+
+        List<string> GetTracksInRectangle(double ltLat, double ltLng, double rbLat, double rbLng);
+
+        public TrackDto GetCurrentLocationOfVehicle(string vin);
+
+        public List<string> GetVehiclesWithDistance(string vin, double distance);
     }
 }

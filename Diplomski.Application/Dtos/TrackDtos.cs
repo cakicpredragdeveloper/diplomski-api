@@ -5,47 +5,69 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Elasticsearch.Net;
 
 namespace Diplomski.Application.Dtos
 {
+    [ElasticsearchType(RelationName = "track_")]
     public class TrackDto
     {
-        [JsonProperty("@timestamp")]
-        public long Timestamp { get; set; }
+        [Date(Name = "@timestamp")]
+        public DateTime Timestamp { get; set; }
 
-        [JsonProperty("vin")]
         [Keyword]
         public string Vin { get; set; }
 
-        [JsonProperty("geoLocation")]
         [GeoPoint]
         public GeoLocation GeoLocation { get; set; }
 
-        [JsonProperty("speed")]
         [Number]
         public float Speed { get; set; }
 
-        [JsonProperty("place")]
         [Keyword]
         public string Place { get; set; }
 
-        [JsonProperty("kilometrageStartOfDay")]
+        [Number]
         public float KilometrageStartOfDay { get; set; }
 
-        [JsonProperty("kilometrage")]
+        [Number]
         public float Kilometrage { get; set; }
 
-        [JsonProperty("fuelLevel")]
+        [Number]
         public float FuelLevel { get; set; }
 
-        [JsonProperty("City")]
         [Keyword]
         public string City { get; set; }
 
-        [JsonProperty("bateryVoltage")]
+        [Number]
         public float BateryVoltage { get; set; }
 
-        [JsonProperty("direction")]
+        [Number]
         public float Direction { get; set; }
+
+        [Keyword]
+        public string ManufacturerName { get; set; }
+
+        [Keyword]
+        public string ModelName { get; set; }
+    }
+
+    public class KilometrageByDate
+    {
+        public DateTime Date { get; set; }
+
+        public double Kilometrage { get; set; }
+    }
+
+    public class KilometrageStatistics
+    {
+        public IList<KilometrageByDate> KilometrageByDate { get; set; } = new List<KilometrageByDate>();
+    }
+
+    public class SpeedStatistics
+    {
+        public double Min { get; set; }
+        public double Max { get; set; }
+        public double Avg { get; set; }
     }
 }

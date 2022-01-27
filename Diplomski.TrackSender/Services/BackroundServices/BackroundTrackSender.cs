@@ -82,7 +82,7 @@ namespace Diplomski.TrackSender.BackroundServices
             return new TrackDto()
             {
                 Vin = vin,
-                Timestamp = timeStamp,
+                //Timestamp = timeStamp,
                 GeoLocation = new GeoLocation(lat, lng),
                 Speed = speed,
                 Place = place,

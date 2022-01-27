@@ -105,31 +105,27 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
                 }
             }
 
-            if(filter.YearProduced != null)
+
+            rangeQuery = new NumericRangeQuery()
             {
-                rangeQuery = new NumericRangeQuery()
-                {
-                    Name = "yearProduced_range",
-                    Field = "yearProduced",
-                    GreaterThanOrEqualTo = filter.YearProduced.From ?? null,
-                    LessThanOrEqualTo = filter.YearProduced.To ?? null
-                };
+                Name = "yearProduced_range",
+                Field = "yearProduced",
+                GreaterThanOrEqualTo = filter.YearFrom ?? null,
+                LessThanOrEqualTo = filter.YearTo ?? null
+            };
 
-                queryContainer &= rangeQuery;
-            }
+            queryContainer &= rangeQuery;
 
-            if(filter.OdometerValue != null)
+            rangeQuery = new NumericRangeQuery()
             {
-                rangeQuery = new NumericRangeQuery()
-                {
-                    Name = "odometerValue_range",
-                    Field = "odometerValue",
-                    GreaterThanOrEqualTo = filter.OdometerValue.From ?? null,
-                    LessThanOrEqualTo = filter.OdometerValue.To ?? null
-                };
+                Name = "odometerValue_range",
+                Field = "odometerValue",
+                GreaterThanOrEqualTo = filter.OdometerFrom ?? null,
+                LessThanOrEqualTo = filter.OdometerTo ?? null
+            };
 
-                queryContainer &= rangeQuery;
-            }
+            queryContainer &= rangeQuery;
+
 
             if (!string.IsNullOrEmpty(filter.EngineFuel))
             {
