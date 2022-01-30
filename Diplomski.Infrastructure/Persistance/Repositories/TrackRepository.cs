@@ -172,8 +172,10 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
             return result;
         }
 
-        public List<string> GetTracksWithGeoDistanceOfPoint(double lat, double lng, double distance)
+        public List<TrackDto> GetTracksWithGeoDistanceOfPoint(double lat, double lng, double distance)
         {
+            List<TrackDto> result = new List<TrackDto>();
+
             DateRangeQuery dateRange = new DateRangeQuery()
             {
                 Name = "timestamp_range",
@@ -197,13 +199,21 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
                 .Query(_ => queryContainer)
                 .Index("timeseries_tracking"));
 
-            var result = searchResponse.Documents.Select(x => x.Vin).Distinct().ToList();
+            var vinList = searchResponse.Documents.Select(x => x.Vin).Distinct().ToList();
+
+            foreach(var vin in vinList)
+            {
+                var track = searchResponse.Documents.Where(doc => doc.Vin == vin).Last();
+                result.Add(track);
+            }
 
             return result;
         }
 
-        public List<string> GetTracksInRectangle(double ltLat, double ltLng, double rbLat, double rbLng)
+        public List<TrackDto> GetTracksInRectangle(double ltLat, double ltLng, double rbLat, double rbLng)
         {
+            List<TrackDto> result = new List<TrackDto>();
+
             DateRangeQuery dateRange = new DateRangeQuery()
             {
                 Name = "timestamp_range",
@@ -230,7 +240,13 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
                 .Query(_ => queryContainer)
                 .Index("timeseries_tracking"));
 
-            var result = searchResponse.Documents.Select(x => x.Vin).Distinct().ToList();
+            var vinList = searchResponse.Documents.Select(x => x.Vin).Distinct().ToList();
+
+            foreach (var vin in vinList)
+            {
+                var track = searchResponse.Documents.Where(doc => doc.Vin == vin).Last();
+                result.Add(track);
+            }
 
             return result;
         }
@@ -267,13 +283,13 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
             return null;
         }
 
-        public List<string> GetVehiclesWithDistance(string vin, double distance)
+        public List<TrackDto> GetVehiclesWithDistance(string vin, double distance)
         {
             var currentPosition = GetCurrentLocationOfVehicle(vin);
 
             if(currentPosition != null)
             {
-                var vehicles = GetTracksWithGeoDistanceOfPoint(currentPosition.GeoLocation.Latitude, currentPosition.GeoLocation.Longitude, distance).Where(x => x != vin).ToList();
+                var vehicles = GetTracksWithGeoDistanceOfPoint(currentPosition.GeoLocation.Latitude, currentPosition.GeoLocation.Longitude, distance).Where(x => x.Vin != vin).ToList();
                 return vehicles;
             }
 

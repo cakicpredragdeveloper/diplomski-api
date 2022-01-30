@@ -24,12 +24,12 @@ namespace Diplomski.Application.Interfaces.ThirdPartyContracts
 
         KilometrageStatistics GetKiloMetrageForVehiclesByDateInterval(MarksModelsTrackSearchParameteres searchParameteres);
 
-        List<string> GetTracksWithGeoDistanceOfPoint(double lat, double lng, double distance);
+        List<TrackDto> GetTracksWithGeoDistanceOfPoint(double lat, double lng, double distance);
 
-        List<string> GetTracksInRectangle(double ltLat, double ltLng, double rbLat, double rbLng);
+        List<TrackDto> GetTracksInRectangle(double ltLat, double ltLng, double rbLat, double rbLng);
 
         TrackDto GetCurrentLocationOfVehicle(string vin);
 
-        List<string> GetVehiclesWithDistance(string vin, double distance);
+        List<TrackDto> GetVehiclesWithDistance(string vin, double distance);
     }
 }

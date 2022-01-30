@@ -70,20 +70,20 @@ namespace Diplomski.Application.Services
             return result;
         }
 
-        public List<string> GetTracksInRectangle(double ltLat, double ltLng, double rbLat, double rbLng)
+        public List<TrackDto> GetTracksInRectangle(double ltLat, double ltLng, double rbLat, double rbLng)
         {
             var result = _trackRepository.GetTracksInRectangle(ltLat, ltLng, rbLat, rbLng);
 
             return result;
         }
 
-        public List<string> GetTracksWithGeoDistanceOfPoint(double lat, double lng, double distance)
+        public List<TrackDto> GetTracksWithGeoDistanceOfPoint(double lat, double lng, double distance)
         {
             var result = _trackRepository.GetTracksWithGeoDistanceOfPoint(lat, lng, distance);
             return result;
         }
 
-        public List<string> GetVehiclesWithDistance(string vin, double distance)
+        public List<TrackDto> GetVehiclesWithDistance(string vin, double distance)
         {
             var result = _trackRepository.GetVehiclesWithDistance(vin, distance);
 
