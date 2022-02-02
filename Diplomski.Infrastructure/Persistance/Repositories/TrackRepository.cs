@@ -210,8 +210,10 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
             return result;
         }
 
-        public List<TrackDto> GetTracksInRectangle(double ltLat, double ltLng, double rbLat, double rbLng)
+        public List<TrackDto> GetTracksInPolygon(ICollection<Point> points)
         {
+            var pointsArray = points.Select(point => new GeoLocation(point.lat, point.lng)).ToArray();
+
             List<TrackDto> result = new List<TrackDto>();
 
             DateRangeQuery dateRange = new DateRangeQuery()
@@ -222,19 +224,15 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
                 LessThanOrEqualTo = Nest.DateMath.Now
             };
 
-            GeoBoundingBoxQuery geoBoundingBoxQuery = new GeoBoundingBoxQuery()
+            GeoPolygonQuery geoPolygonQuery = new GeoPolygonQuery()
             {
                 Field = Infer.Field<TrackDto>(t => t.GeoLocation),
-                BoundingBox = new BoundingBox()
-                {
-                    TopLeft = new GeoLocation(ltLat, ltLng),
-                    BottomRight = new GeoLocation(rbLat, rbLng)
-                }
+                Points = points.Select(point => new GeoLocation(point.lat, point.lng)).ToArray()
             };
 
             var queryContainer = new QueryContainer();
             queryContainer &= dateRange;
-            queryContainer &= geoBoundingBoxQuery;
+            queryContainer &= geoPolygonQuery;
 
             var searchResponse = _elasticClient.Search<TrackDto>(s => s
                 .Query(_ => queryContainer)

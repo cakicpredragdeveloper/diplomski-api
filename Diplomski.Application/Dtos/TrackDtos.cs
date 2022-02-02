@@ -70,4 +70,11 @@ namespace Diplomski.Application.Dtos
         public double Max { get; set; }
         public double Avg { get; set; }
     }
+
+    public class Point
+    {
+        public double lat { get; set; }
+
+        public double lng { get; set; }
+    }
 }

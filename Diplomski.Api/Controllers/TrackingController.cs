@@ -90,10 +90,10 @@ namespace Diplomski.Api.Controllers
             return Ok(vehicles);
         }
 
-        [HttpGet("vehicles-in-rectangle")]
-        public IActionResult GetTracksInRectangle(double ltLat, double ltLng, double rbLat, double rbLng)
+        [HttpPost("vehicles-within-polygon")]
+        public IActionResult GetTracksInPolygon([FromBody]ICollection<Point> points)
         {
-            var vehicles = _trackService.GetTracksInRectangle(ltLat, ltLng, rbLat, rbLng);
+            var vehicles = _trackService.GetTracksInPolygon(points);
 
             return Ok(vehicles);
         }

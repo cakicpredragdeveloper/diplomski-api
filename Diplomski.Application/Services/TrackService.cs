@@ -70,10 +70,9 @@ namespace Diplomski.Application.Services
             return result;
         }
 
-        public List<TrackDto> GetTracksInRectangle(double ltLat, double ltLng, double rbLat, double rbLng)
+        public List<TrackDto> GetTracksInPolygon(ICollection<Point> points)
         {
-            var result = _trackRepository.GetTracksInRectangle(ltLat, ltLng, rbLat, rbLng);
-
+            var result = _trackRepository.GetTracksInPolygon(points);
             return result;
         }
 

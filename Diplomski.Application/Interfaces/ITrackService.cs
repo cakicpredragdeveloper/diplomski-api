@@ -25,7 +25,7 @@ namespace Diplomski.Application.Interfaces
 
         List<TrackDto> GetTracksWithGeoDistanceOfPoint(double lat, double lng, double distance);
 
-        List<TrackDto> GetTracksInRectangle(double ltLat, double ltLng, double rbLat, double rbLng);
+        List<TrackDto> GetTracksInPolygon(ICollection<Point> points);
 
         public TrackDto GetCurrentLocationOfVehicle(string vin);
 
