@@ -155,7 +155,7 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
             queryContainer &= dateRange;
             queryContainer &= term;
 
-            if(string.IsNullOrEmpty(searchParameteres.ModelName))
+            if(!string.IsNullOrEmpty(searchParameteres.ModelName))
             {
                 term = new TermQuery { Field = "modelName", Value = searchParameteres.ModelName };
                 queryContainer &= term;
@@ -305,11 +305,14 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
 
             foreach (var bucket in dateHistogramBuckets)
             {
+                //if(bucket.Stats("kilometrage_stats").Max != null)
+                //{
                 result.KilometrageByDate.Add(new KilometrageByDate()
                 {
                     Date = bucket.Date,
-                    Kilometrage = (double)(bucket.Stats("kilometrage_stats").Max - bucket.Stats("kilometrage_stats").Min)
-                });
+                    Kilometrage = bucket.Stats("kilometrage_stats").Max != null ? (double)(bucket.Stats("kilometrage_stats").Max - bucket.Stats("kilometrage_stats").Min) : 0
+                }); 
+                //}
             }
 
             return result;
