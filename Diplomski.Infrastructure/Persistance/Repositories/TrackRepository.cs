@@ -128,13 +128,21 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
             queryContainer &= term;
             queryContainer &= dateRange;
 
-            var searchResponse = _elasticClient.Search<TrackDto>(s => s
+            var kilometrageStatsResponse = _elasticClient.Search<TrackDto>(s => s
                 .Query(_ => queryContainer)
                 .Aggregations(agg => agg.DateHistogram("date_histogram", dh => dh.Field(track => track.Timestamp).CalendarInterval(searchParameter.DateInterval)
                         .Aggregations(agg => agg.Stats("kilometrage_stats", track => track.Field(field => field.Kilometrage)))))
                 .Index("timeseries_tracking"));
 
-            var result = GetKilometrageStatisticsFromSearchResponse(searchResponse);
+            var result = GetKilometrageStatisticsFromSearchResponse(kilometrageStatsResponse);
+
+            var fuelUsedStatsResponse = _elasticClient.Search<TrackDto>(s => s
+                .Query(_ => queryContainer)
+                .Aggregations(agg => agg.DateHistogram("date_histogram", dh => dh.Field(track => track.Timestamp).CalendarInterval(searchParameter.DateInterval)
+                        .Aggregations(agg => agg.Stats("fuel_used_stats", track => track.Field(field => field.TotalFuelUsed)))))
+                .Index("timeseries_tracking"));
+
+            UpdateFuelStatistics(ref result, fuelUsedStatsResponse);
 
             return result;
         }
@@ -305,17 +313,29 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
 
             foreach (var bucket in dateHistogramBuckets)
             {
-                //if(bucket.Stats("kilometrage_stats").Max != null)
-                //{
                 result.KilometrageByDate.Add(new KilometrageByDate()
                 {
                     Date = bucket.Date,
                     Kilometrage = bucket.Stats("kilometrage_stats").Max != null ? (double)(bucket.Stats("kilometrage_stats").Max - bucket.Stats("kilometrage_stats").Min) : 0
-                }); 
-                //}
+                });
             }
 
             return result;
+        }
+
+        private void UpdateFuelStatistics(ref KilometrageStatistics statistics, ISearchResponse<TrackDto> searchResponse)
+        {
+            var dateHistogramBuckets = searchResponse.Aggregations.DateHistogram("date_histogram").Buckets;
+
+            foreach (var stats in statistics.KilometrageByDate)
+            {
+                var bucket = dateHistogramBuckets.Where(bucket => bucket.Date == stats.Date).FirstOrDefault();
+
+                if (bucket != null)
+                {
+                    stats.TotalFuelUsed = bucket.Stats("fuel_used_stats").Max != null ? (double)(bucket.Stats("fuel_used_stats").Max - bucket.Stats("fuel_used_stats").Min) : 0;
+                }
+            }
         }
 
         private SpeedStatistics GetSpeedStatisticsFromSearchResponse(ISearchResponse<TrackDto> searchResponse)

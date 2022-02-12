@@ -32,7 +32,7 @@ namespace Diplomski.Api.Controllers
         public IActionResult ImportFromCsv()
         {
             List<TrackDto> tracks = new List<TrackDto>();
-            using (var reader = new StreamReader("C:\\Users\\Predrag\\Desktop\\vehicles_tracking_csv.csv"))
+            using (var reader = new StreamReader("C:\\Users\\Predrag\\Desktop\\1202_vehicles.csv"))
             {
                 while (!reader.EndOfStream)
                 {
@@ -121,18 +121,20 @@ namespace Diplomski.Api.Controllers
             string[] values = line.Split(',');
 
             string vin = values[0];
-            double lat = Double.Parse(values[1]);
-            double lng = Double.Parse(values[2]);
+            double lat = double.Parse(values[1]);
+            double lng = double.Parse(values[2]);
             DateTime dateTimeTmp = DateTime.Parse(values[3]);
-            float speed = float.Parse(values[4]);
-            float kilometrageStartOfDay = float.Parse(values[5]);
-            float kilometrage = float.Parse(values[6]);
-            float fuelLevel = float.Parse(values[7]);
-            string city = values[8];
-            float bateryVoltage = float.Parse(values[9]);
-            float direction = float.Parse(values[10]);
-            string manufacturerName = values[11];
-            string modelName = values[12];
+            float totalFuelUsed = float.Parse(values[4]);
+            bool started = values[5] == "1" ? true : false;
+            float speed = float.Parse(values[6]);
+            float kilometrageStartOfDay = float.Parse(values[7]);
+            float kilometrage = float.Parse(values[8]);
+            float fuelLevel = float.Parse(values[9]);
+            string city = values[10];
+            float bateryVoltage = float.Parse(values[11]);
+            float direction = float.Parse(values[12]);
+            string manufacturerName = values[13];
+            string modelName = values[14];
 
             return new TrackDto()
             {
@@ -144,6 +146,8 @@ namespace Diplomski.Api.Controllers
                 KilometrageStartOfDay = kilometrageStartOfDay,
                 Kilometrage = kilometrage,
                 FuelLevel = fuelLevel,
+                TotalFuelUsed = totalFuelUsed,
+                Started = started,
                 City = city,
                 BateryVoltage = bateryVoltage,
                 Direction = direction,

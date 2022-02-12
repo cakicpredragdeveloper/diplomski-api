@@ -36,6 +36,12 @@ namespace Diplomski.Application.Dtos
         [Number]
         public float FuelLevel { get; set; }
 
+        [Number]
+        public float TotalFuelUsed { get; set; }
+
+        [Boolean]
+        public bool Started { get; set; }
+
         [Keyword]
         public string City { get; set; }
 
@@ -57,6 +63,8 @@ namespace Diplomski.Application.Dtos
         public DateTime Date { get; set; }
 
         public double Kilometrage { get; set; }
+
+        public double TotalFuelUsed { get; set; }
     }
 
     public class KilometrageStatistics

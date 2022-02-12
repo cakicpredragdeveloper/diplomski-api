@@ -138,7 +138,7 @@ namespace Diplomski.Infrastructure.Persistance.Repositories
 
             if(!string.IsNullOrEmpty(filter.Drivetrain))
             {
-                query = new TermQuery { Field = "driveTrain", Value = filter.Drivetrain };
+                query = new TermQuery { Field = "drivetrain", Value = filter.Drivetrain };
                 queryContainer &= query;
             }
 

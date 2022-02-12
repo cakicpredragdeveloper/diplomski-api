@@ -76,18 +76,20 @@ namespace Diplomski.TrackSender.BackroundServices
             string[] values = line.Split(',');
 
             string vin = values[0];
-            double lat = Double.Parse(values[1]);
-            double lng = Double.Parse(values[2]);
+            double lat = double.Parse(values[1]);
+            double lng = double.Parse(values[2]);
             DateTime dateTimeTmp = DateTime.Now;
-            float speed = float.Parse(values[4]);
-            float kilometrageStartOfDay = float.Parse(values[5]);
-            float kilometrage = float.Parse(values[6]);
-            float fuelLevel = float.Parse(values[7]);
-            string city = values[8];
-            float bateryVoltage = float.Parse(values[9]);
-            float direction = float.Parse(values[10]);
-            string manufacturerName = first == true ? "Kia" : "Audi";
-            string modelName = first == true ? "Rio" : "A3";
+            float totalFuelUsed = float.Parse(values[4]);
+            bool started = values[5] == "1" ? true : false;
+            float speed = float.Parse(values[6]);
+            float kilometrageStartOfDay = float.Parse(values[7]);
+            float kilometrage = float.Parse(values[8]);
+            float fuelLevel = float.Parse(values[9]);
+            string city = values[10];
+            float bateryVoltage = float.Parse(values[11]);
+            float direction = float.Parse(values[12]);
+            string manufacturerName = first == true ? "Kia" : "Kia";
+            string modelName = first == true ? "Rio" : "Rio";
 
             return new TrackDto()
             {
@@ -99,6 +101,8 @@ namespace Diplomski.TrackSender.BackroundServices
                 KilometrageStartOfDay = kilometrageStartOfDay,
                 Kilometrage = kilometrage,
                 FuelLevel = fuelLevel,
+                TotalFuelUsed = totalFuelUsed,
+                Started = started,
                 City = city,
                 BateryVoltage = bateryVoltage,
                 Direction = direction,
