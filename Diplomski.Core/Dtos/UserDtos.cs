@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Diplomski.Application.Dtos
+namespace Diplomski.Models.Dtos
 {
     public class UserDto
     {
@@ -21,8 +21,6 @@ namespace Diplomski.Application.Dtos
         public string IdentityId { get; set; }
 
         public int LocationId { get; set; }
-
-        //public LocationDto Location { get; set; }
 
         public bool ShowMyOnlineStatus { get; set; }
 

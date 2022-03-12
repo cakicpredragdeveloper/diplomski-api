@@ -1,5 +1,5 @@
 ﻿using Confluent.Kafka;
-using Diplomski.Application.Dtos;
+using Diplomski.Models.Dtos;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Nest;

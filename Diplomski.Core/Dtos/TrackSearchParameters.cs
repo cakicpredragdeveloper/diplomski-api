@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Diplomski.Application.Dtos
+namespace Diplomski.Models.Dtos
 {
     public abstract class TrackSearchParameters
     {

@@ -1,4 +1,4 @@
-﻿using Diplomski.Application.Dtos;
+﻿using Diplomski.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Text;

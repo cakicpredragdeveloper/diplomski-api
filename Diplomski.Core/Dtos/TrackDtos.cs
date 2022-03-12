@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
 
-namespace Diplomski.Application.Dtos
+namespace Diplomski.Models.Dtos
 {
     [ElasticsearchType(RelationName = "track_")]
     public class TrackDto

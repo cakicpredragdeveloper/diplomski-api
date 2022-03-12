@@ -1,4 +1,4 @@
-﻿using Diplomski.Application.Dtos;
+﻿using Diplomski.Models.Dtos;
 using Diplomski.Application.Interfaces.ThirdPartyContracts;
 using Elasticsearch.Net;
 using Nest;

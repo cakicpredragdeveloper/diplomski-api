@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Diplomski.Application\Diplomski.Application.csproj" />
+    <ProjectReference Include="..\Diplomski.Core\Diplomski.Models.csproj" />
   </ItemGroup>
 
 </Project>

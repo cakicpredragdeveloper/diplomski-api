@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Diplomski.Application.Dtos;
+using Diplomski.Models.Dtos;
 using Microsoft.AspNetCore.Identity;
 using Diplomski.Infrastructure.Identity.Models;
 using Diplomski.Application.Interfaces;

@@ -1,4 +1,4 @@
-﻿using Diplomski.Application.Dtos;
+﻿using Diplomski.Models.Dtos;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;

@@ -5,13 +5,13 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diplomski.Api", "Diplomski.Api\Diplomski.Api.csproj", "{AAB4127D-3F61-4B7D-BCB3-FA792E53205B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diplomski.Core", "Diplomski.Core\Diplomski.Core.csproj", "{F383894F-D927-45C3-98D8-44042676993E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diplomski.Models", "Diplomski.Core\Diplomski.Models.csproj", "{F383894F-D927-45C3-98D8-44042676993E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diplomski.Application", "Diplomski.Application\Diplomski.Application.csproj", "{88297CC0-3DF5-4F10-B798-28345D9BA12E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diplomski.Infrastructure", "Diplomski.Infrastructure\Diplomski.Infrastructure.csproj", "{09E50EE2-B1A2-4013-A0F6-0D5190FFF904}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diplomski.TrackSender", "Diplomski.TrackSender\Diplomski.TrackSender.csproj", "{7F9BA183-21F8-4D29-B454-522A9197A4E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diplomski.TrackSender", "Diplomski.TrackSender\Diplomski.TrackSender.csproj", "{7F9BA183-21F8-4D29-B454-522A9197A4E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
