@@ -17,8 +17,9 @@ namespace Diplomski.TrackSender.BackroundServices
     public class BackroundTrackSender : IHostedService
     {
         private readonly ILogger<BackroundTrackSender> _logger;
-        private IProducer<Null, string> _producer;
-        private bool first;
+        private readonly IProducer<Null, string> _producer;
+        private readonly int vehicleNumbers;
+
         public BackroundTrackSender(ILogger<BackroundTrackSender> logger)
         {
             _logger = logger;
@@ -28,38 +29,41 @@ namespace Diplomski.TrackSender.BackroundServices
                 BootstrapServers = "localhost:9092",
             };
             _producer = new ProducerBuilder<Null, string>(config).Build();
+
+            vehicleNumbers = 11;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            using (var reader1 = new StreamReader("C:\\Users\\Predrag\\Desktop\\1G6AH5SX0E0299293.csv"))
+            using (var reader = new StreamReader("C:\\Users\\Predrag\\Desktop\\KAFKA TRACKOVI\\kafka-coordinates.csv"))
             {
-                using(var reader2 = new StreamReader("C:\\Users\\Predrag\\Desktop\\WAUKG78E46A840649.csv"))
+                Thread.Sleep(10000);
+
+                while (!reader.EndOfStream)
                 {
-                    Thread.Sleep(10000);
+                    List<TrackDto> signals = new List<TrackDto>();
 
-                    first = true;
-
-                    while (!reader1.EndOfStream && !reader2.EndOfStream)
+                    for (int count = 0; count < 11; count++)
                     {
-                        var line = first == true ? reader1.ReadLine() : reader2.ReadLine();
-
-                        var track = GetTrackFromLine(line);
-
-                        string json = JsonConvert.SerializeObject(track);
-                        _logger.LogInformation("Sending track: \n" + json + "\n\n");
-
-                        await _producer.ProduceAsync("demo-tracks-topic",
-                                                    new Message<Null, string>() { Value = json },
-                                                    cancellationToken);
-
-                        first = !first;
-
-                        Thread.Sleep(60000);
+                        if(!reader.EndOfStream)
+                        {
+                            var line = reader.ReadLine();
+                            var track = GetTrackFromLine(line);
+                            signals.Add(track);
+                        }
                     }
-                    
-                    _producer.Flush(TimeSpan.FromSeconds(10));
+
+                    string json = JsonConvert.SerializeObject(signals);
+                    _logger.LogInformation("Sending tracks: \n" + json + "\n\n");
+
+                    await _producer.ProduceAsync("demo-tracks-topic",
+                                                new Message<Null, string>() { Value = json },
+                                                cancellationToken);
+
+                    Thread.Sleep(60000);
                 }
+                    
+                _producer.Flush(TimeSpan.FromSeconds(10));
             }
         }
 
@@ -75,21 +79,22 @@ namespace Diplomski.TrackSender.BackroundServices
         {
             string[] values = line.Split(',');
 
-            string vin = values[0];
-            double lat = double.Parse(values[1]);
-            double lng = double.Parse(values[2]);
             DateTime dateTimeTmp = DateTime.Now;
-            float totalFuelUsed = float.Parse(values[4]);
-            bool started = values[5] == "1" ? true : false;
-            float speed = float.Parse(values[6]);
-            float kilometrageStartOfDay = float.Parse(values[7]);
-            float kilometrage = float.Parse(values[8]);
-            float fuelLevel = float.Parse(values[9]);
-            string city = values[10];
-            float bateryVoltage = float.Parse(values[11]);
-            float direction = float.Parse(values[12]);
-            string manufacturerName = first == true ? "Kia" : "Kia";
-            string modelName = first == true ? "Rio" : "Rio";
+            string vin = values[0];
+            double lat = double.Parse(values[1].Remove(0,1));
+            double lng = double.Parse(values[2].Remove(values[2].Count() - 1, 1));
+            float speed = float.Parse(values[3]);
+            float kilometrageStartOfDay = float.Parse(values[4]);
+            float kilometrage = float.Parse(values[5]);
+            float fuelLevel = float.Parse(values[6]);
+            float totalFuelUsed = float.Parse(values[7]);
+            bool started = values[8] == "1" ? true : false;
+            string city = values[9];
+            float bateryVoltage = float.Parse(values[10]);
+            float direction = float.Parse(values[11]);
+            string manufacturerName = values[12];
+            string modelName = values[13];
+
 
             return new TrackDto()
             {

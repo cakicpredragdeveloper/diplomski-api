@@ -8,9 +8,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using OfficeOpenXml;
 
 namespace Diplomski.Api.Controllers
 {
+
+    public class TracksDto
+    {
+        public string Vin { get; set; }
+        public List<TrackDto> TrackList { get; set; } = new List<TrackDto>();
+    }
+
     [ApiController]
     public class TrackingController : Controller
     {
@@ -32,7 +40,7 @@ namespace Diplomski.Api.Controllers
         public IActionResult ImportFromCsv()
         {
             List<TrackDto> tracks = new List<TrackDto>();
-            using (var reader = new StreamReader("C:\\Users\\Predrag\\Desktop\\1202_vehicles.csv"))
+            using (var reader = new StreamReader("C:\\Users\\Predrag\\Desktop\\SVI TRACKOVI\\all-coordinates.csv"))
             {
                 while (!reader.EndOfStream)
                 {
@@ -42,7 +50,57 @@ namespace Diplomski.Api.Controllers
                 }
             }
 
-            _trackService.AddTrackList(tracks);
+            //_trackService.AddTrackList(tracks);
+
+
+            #region obrada
+
+            var result = new List<TracksDto>();
+            var finalTracks = new List<TrackDto>();
+
+            var vins = tracks.Select(t => t.Vin).Distinct().ToList();
+
+            foreach(var vin in vins)
+            {
+                var tracksByVin = tracks.Where(t => t.Vin == vin).ToList();
+                var tracksDto = new TracksDto()
+                {
+                    Vin = vin,
+                    TrackList = tracksByVin
+                };
+                result.Add(tracksDto);
+            }
+
+            int count = result.Count();
+
+            bool condition = true;
+
+            while(condition)
+            {
+                foreach(var tracksDto in result)
+                {
+                    if(tracksDto.TrackList.Count() > 0)
+                    {
+                        finalTracks.Add(tracksDto.TrackList.First());
+                        tracksDto.TrackList.RemoveAt(0);
+                    }
+                }
+
+                if(!result.Any(t => t.TrackList.Count() > 0))
+                {
+                    condition = false;
+                }
+            }
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using(ExcelPackage pck = new ExcelPackage())
+            {
+                pck.Workbook.Worksheets.Add("TimeseriesTracking").Cells[1, 1].LoadFromCollection(finalTracks, true);
+                pck.SaveAs(new FileInfo("C:\\Users\\Predrag\\Desktop\\KAFKA TRACKOVI\\kafka-coordinates.xlsx"));
+            }
+
+            #endregion
 
             return Ok();
         }

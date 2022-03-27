@@ -12,7 +12,7 @@ namespace Diplomski.Application.Interfaces.ThirdPartyContracts
     {
         void AddTrack(TrackDto track);
 
-        void AddTrackList(List<TrackDto> tracks);
+        void AddTrackList(List<TrackDto> tracks);    
 
         List<TrackDto> GetTracksForVehicle(VehicleTrackSearchParameters searchParameters);
 

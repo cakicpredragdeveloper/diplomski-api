@@ -49,9 +49,14 @@ namespace Diplomski.Application.Services.BackroundServices
 
                 string json = Encoding.UTF8.GetString(record.Value as byte[]);
 
-                TrackDto track = JsonConvert.DeserializeObject<TrackDto>(json);
+                List<TrackDto> signals = JsonConvert.DeserializeObject<List<TrackDto>>(json);
 
-                var indexResponse = _elasticClient.Index<TrackDto>(track, i => i.Index("timeseries_tracking"));
+                foreach(var track in signals)
+                {
+                    var indexResponse = _elasticClient.Index<TrackDto>(track, i => i.Index("timeseries_tracking"));
+                }
+
+                // var indexResponse = _elasticClient.IndexMany<TrackDto>(signals, "timeseries_tracking");
             };
         }
 
